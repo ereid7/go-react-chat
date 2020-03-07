@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import "./ChatHistory.scss"
-import Message from '../Message';
+import Message from '../../Message';
 
 class ChatHistory extends Component {
     render() {
         console.log(this.props.chatHistory)
+        // TODO give each message unique key
         const messages = this.props.chatHistory.map(msg => <Message message={msg.data} />);
 
         return (

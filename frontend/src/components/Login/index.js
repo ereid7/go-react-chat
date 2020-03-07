@@ -1,3 +1,3 @@
-import Login from "./Login.jsx"
+import LoginPage from "./Login.jsx"
 
-export default Login;
+export default LoginPage;
