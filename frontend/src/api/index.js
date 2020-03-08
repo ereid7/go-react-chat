@@ -22,9 +22,14 @@ let connect = cb => {
   };
 };
 
-let sendMsg = (msg) => {
-  //console.log("sending msg: ", msg);
-  socket.send(msg);
+let sendMsg = (user, msg) => {
+  console.log("sending msg: ", msg);
+
+  let messageData = {
+    "message": msg,
+    "user": user
+  }
+  socket.send(JSON.stringify(messageData));
 };
 
 export { connect, sendMsg };

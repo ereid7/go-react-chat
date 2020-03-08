@@ -1,10 +1,13 @@
 class Auth {
+
   constructor() {
     this.authenticated = false;
+    this.user = null;
   }
 
-  login(cb) {
+  login(name, cb) {
     this.authenticated = true;
+    this.user = name;
     cb();
   }
 
@@ -15,6 +18,10 @@ class Auth {
 
   isAuthenticated() {
     return this.authenticated;
+  }
+
+  getUser() {
+    return this.user;
   }
 }
 

@@ -1,4 +1,5 @@
 package websocket
+import "encoding/json"
 
 import (
 	"fmt"
@@ -16,6 +17,12 @@ type Client struct {
 type Message struct {
 	Type int    `json:"type"`
 	Body string `json:"body"`
+	User string `json:"user"`
+}
+
+type MessageData struct {
+	Message string
+	User string
 }
 
 func (c *Client) Read() {
@@ -30,7 +37,15 @@ func (c *Client) Read() {
 				log.Println(err)
 				return
 		}
-		message := Message{Type: messageType, Body: string(p)}
+
+		var messageData MessageData
+		json.Unmarshal([]byte(p), &messageData)
+
+		message := Message {
+			Type: messageType, 
+			Body: messageData.Message,
+			User: messageData.User }
+			
 		c.Pool.Broadcast <- message
 		fmt.Printf("Message Received: %+v\n", message)
   }

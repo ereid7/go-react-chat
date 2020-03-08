@@ -42,7 +42,7 @@ class ChatPage extends Component {
 
   send(event) {
     if(event.keyCode === 13) {
-      sendMsg(event.target.value);
+      sendMsg(auth.getUser(), event.target.value);
       event.target.value = "";
     }
   }
