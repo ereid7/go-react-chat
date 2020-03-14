@@ -35,7 +35,7 @@ func (c *Client) Read() {
 		messageType, p, err := c.Conn.ReadMessage()
 		if err != nil {
 				log.Println(err)
-				return
+				return 
 		}
 
 		var messageData MessageData

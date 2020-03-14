@@ -3,9 +3,13 @@ package main
 import (
     "fmt"
     "net/http"
-
     "github.com/evanreid88/go-react-chat/pkg/websocket"
 )
+
+type ChatServer struct {
+    ServeWebSocket func(*websocket.Pool, http.ResponseWriter, *http.Request)
+    SetupRoutes func()
+}
 
 func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
     fmt.Println("WebSocket Endpoint Hit")
@@ -24,6 +28,7 @@ func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 }
 
 func setupRoutes() {
+    fmt.Println("Distributed Chat App v0.01")
     pool := websocket.NewPool()
     go pool.Start()
 
@@ -33,7 +38,11 @@ func setupRoutes() {
 }
 
 func main() {
-    fmt.Println("Distributed Chat App v0.01")
-    setupRoutes()
+    chatServer := ChatServer {
+        ServeWebSocket: serveWs,
+        SetupRoutes: setupRoutes,
+    }
+
+    chatServer.SetupRoutes();
     http.ListenAndServe(":8080", nil)
 }

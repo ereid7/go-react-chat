@@ -3,7 +3,6 @@ package websocket
 import (
 	"log"
 	"net/http"
-
 	"github.com/gorilla/websocket"
 )
 
