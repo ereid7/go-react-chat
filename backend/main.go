@@ -1,4 +1,5 @@
 package main
+//   "container/list"
 
 import (
     "fmt"
@@ -7,11 +8,10 @@ import (
 )
 
 type ChatServer struct {
-    ServeWebSocket func(*websocket.Pool, http.ResponseWriter, *http.Request)
-    SetupRoutes func()
+    messageList []websocket.MessageData 
 }
 
-func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
+func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
     fmt.Println("WebSocket Endpoint Hit")
     conn, err := websocket.Upgrade(w, r)
     if err != nil {
@@ -26,22 +26,18 @@ func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
     pool.Register <- client
     client.Read()
 }
-
-func setupRoutes() {
+    
+func (c *ChatServer) SetupRoutes() {
     fmt.Println("Distributed Chat App v0.01")
     pool := websocket.NewPool()
     go pool.Start()
-
     http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-        serveWs(pool, w, r)
+        c.ServeWebSocket(pool, w, r)
     })
 }
 
 func main() {
-    chatServer := ChatServer {
-        ServeWebSocket: serveWs,
-        SetupRoutes: setupRoutes,
-    }
+    chatServer := ChatServer{ make([]websocket.MessageData, 0) }
 
     chatServer.SetupRoutes();
     http.ListenAndServe(":8080", nil)
