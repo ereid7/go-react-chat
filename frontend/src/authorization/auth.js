@@ -23,7 +23,7 @@ class Auth {
   }
 
   getUser() {
-    return JSON.parse(sessionStorage.getItem(this.sessionStorageUser)._name);
+    return JSON.parse(sessionStorage.getItem(this.sessionStorageUser))._name;
   }
 
   createGuid() {  

@@ -6,6 +6,7 @@ type Pool struct {
 	Unregister chan *Client
 	Clients    map[*Client]bool
 	Broadcast  chan Message
+	MessageList []Message
 }
 
 func NewPool() *Pool {
@@ -27,6 +28,11 @@ func (pool *Pool) Start() {
 					for client, _ := range pool.Clients {
 							fmt.Println(client)
 							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
+
+							// TOOD create message cleanup system
+							for message, _ := range pool.MessageList {
+								client.Conn.WriteJSON(message);
+							}
 					}
 					break
 			case client := <-pool.Unregister:
@@ -41,6 +47,8 @@ func (pool *Pool) Start() {
 					for client, _ := range pool.Clients {
 				
 						// TODO handle user color on frontend
+						pool.MessageList = append(pool.MessageList, message)
+					  fmt.Println(pool.MessageList)
 						if err := client.Conn.WriteJSON(message); err != nil {
 								fmt.Println(err)
 								return
