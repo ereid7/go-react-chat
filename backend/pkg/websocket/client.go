@@ -4,7 +4,7 @@ import "encoding/json"
 import (
 	"fmt"
 	"log"
-
+	"time"
 	"github.com/gorilla/websocket"
 )
 
@@ -13,11 +13,11 @@ type Client struct {
 	Conn *websocket.Conn
 	Pool *Pool
 }
-
 type Message struct {
 	Type int    `json:"type"`
 	Body string `json:"body"`
 	User string `json:"user"`
+	TimeStamp time.Time `json:"timeStamp"`
 }
 
 type MessageData struct {
@@ -44,7 +44,8 @@ func (c *Client) Read() {
 		message := Message {
 			Type: messageType, 
 			Body: messageData.Message,
-			User: messageData.User }
+			User: messageData.User,
+		  TimeStamp: time.Now() }
 			
 		c.Pool.Broadcast <- message
 		fmt.Printf("Message Received: %+v\n", message)

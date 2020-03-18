@@ -1,5 +1,9 @@
 package websocket
 import "fmt"
+import "time"
+
+const messageLimit = 50
+const expirationLimitHrs = 10
 
 type Pool struct {
 	Register   chan *Client
@@ -29,8 +33,9 @@ func (pool *Pool) Start() {
 							fmt.Println(client)
 							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
 
-							// TOOD create message cleanup system
-							for message, _ := range pool.MessageList {
+							pool.CleanupMessageList();
+
+							for _, message := range pool.MessageList {
 								client.Conn.WriteJSON(message);
 							}
 					}
@@ -47,13 +52,27 @@ func (pool *Pool) Start() {
 					for client, _ := range pool.Clients {
 				
 						// TODO handle user color on frontend
+						pool.CleanupMessageList();
 						pool.MessageList = append(pool.MessageList, message)
-					  fmt.Println(pool.MessageList)
 						if err := client.Conn.WriteJSON(message); err != nil {
 								fmt.Println(err)
 								return
 						}
 					}
 			}
+	}
+}
+
+func (pool *Pool) CleanupMessageList() {
+	if (len(pool.MessageList) > messageLimit) {
+		pool.MessageList = pool.MessageList[len(pool.MessageList) - messageLimit:]
+	}
+
+	for index, message := range pool.MessageList {
+		expirationTime := time.Now().Add(-expirationLimitHrs * time.Hour);
+		if (message.TimeStamp.Before(expirationTime)) {
+			pool.MessageList = pool.MessageList[len(pool.MessageList) - index:]
+			return
+		}
 	}
 }
