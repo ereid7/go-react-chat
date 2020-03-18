@@ -29,7 +29,7 @@ func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter,
     
 func (c *ChatServer) SetupRoutes() {
     fmt.Println("Distributed Chat App v0.01")
-    pool := websocket.NewPool()
+    pool := websocket.NewPool(50, 10, 30)
     go pool.Start()
     http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
         c.ServeWebSocket(pool, w, r)

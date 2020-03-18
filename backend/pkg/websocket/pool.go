@@ -2,28 +2,33 @@ package websocket
 import "fmt"
 import "time"
 
-const messageLimit = 50
-const expirationLimitHrs = 10
-
 type Pool struct {
 	Register   chan *Client
 	Unregister chan *Client
 	Clients    map[*Client]bool
 	Broadcast  chan Message
-	MessageList []Message
+	_messageList []Message
+	_messageLimit int
+	_expirationLimitHrs time.Duration
+	_cleanupHeartbeatIntervalMins time.Duration
 }
 
-func NewPool() *Pool {
+func NewPool(messageLimit int, expirationLimitHrs time.Duration, cleanupHeartbeatIntervalMins time.Duration) *Pool {
 	return &Pool{
-			Register:   make(chan *Client),
-			Unregister: make(chan *Client),
-			Clients:    make(map[*Client]bool),
-			Broadcast:  make(chan Message),
+			Register:     make(chan *Client),
+			Unregister:   make(chan *Client),
+			Clients:      make(map[*Client]bool),
+			Broadcast:    make(chan Message),
+			_messageList: []Message{},
+			_messageLimit: messageLimit,
+			_expirationLimitHrs: expirationLimitHrs,
+			_cleanupHeartbeatIntervalMins: cleanupHeartbeatIntervalMins,
 	}
 }
 
 // TODO prevent un-authenticated users from connecting
 func (pool *Pool) Start() {
+	go pool.cleanupHeartBeat()
 	for {
 			select {
 			case client := <-pool.Register:
@@ -35,7 +40,7 @@ func (pool *Pool) Start() {
 
 							pool.CleanupMessageList();
 
-							for _, message := range pool.MessageList {
+							for _, message := range pool._messageList {
 								client.Conn.WriteJSON(message);
 							}
 					}
@@ -53,7 +58,7 @@ func (pool *Pool) Start() {
 				
 						// TODO handle user color on frontend
 						pool.CleanupMessageList();
-						pool.MessageList = append(pool.MessageList, message)
+						pool._messageList = append(pool._messageList, message)
 						if err := client.Conn.WriteJSON(message); err != nil {
 								fmt.Println(err)
 								return
@@ -63,15 +68,21 @@ func (pool *Pool) Start() {
 	}
 }
 
+func (pool *Pool) cleanupHeartBeat() {
+	for range time.Tick(time.Minute * pool._cleanupHeartbeatIntervalMins) {
+		pool.CleanupMessageList()
+	}
+}
+
 func (pool *Pool) CleanupMessageList() {
-	if (len(pool.MessageList) > messageLimit) {
-		pool.MessageList = pool.MessageList[len(pool.MessageList) - messageLimit:]
+	if (len(pool._messageList) > pool._messageLimit) {
+		pool._messageList = pool._messageList[len(pool._messageList) - pool._messageLimit:]
 	}
 
-	for index, message := range pool.MessageList {
-		expirationTime := time.Now().Add(-expirationLimitHrs * time.Hour);
+	for index, message := range pool._messageList {
+		expirationTime := time.Now().Add(-pool._expirationLimitHrs * time.Hour);
 		if (message.TimeStamp.Before(expirationTime)) {
-			pool.MessageList = pool.MessageList[len(pool.MessageList) - index:]
+			pool._messageList = pool._messageList[len(pool._messageList) - index:]
 			return
 		}
 	}
