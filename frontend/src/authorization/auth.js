@@ -19,7 +19,9 @@ class Auth {
   }
 
   isAuthenticated() {
-    return sessionStorage.getItem(this.sessionStorageUser);
+    var test = sessionStorage.getItem(this.sessionStorageUser);
+    console.log(test)
+    return test;
   }
 
   getUser() {

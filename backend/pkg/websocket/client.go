@@ -34,7 +34,7 @@ func (c *Client) Read() {
 		c.Pool.Unregister <- c
 		c.Conn.Close()
 	}()
-
+		 
 	for {
 		messageType, p, err := c.Conn.ReadMessage()
 		if err != nil {

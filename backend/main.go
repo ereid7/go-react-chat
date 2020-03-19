@@ -22,7 +22,7 @@ func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter,
         Conn: conn,
         Pool: pool,
     }
-
+    
     pool.Register <- client
     client.Read()
 }
