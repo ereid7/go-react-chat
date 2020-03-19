@@ -31,11 +31,15 @@ class ChatPage extends Component {
     // TODO provide real authentication to differentiate users
     if (auth.isAuthenticated()) {
       connect((msg) => {
-        console.log("New Message")
-        this.setState(prevState => ({
-          chatHistory: [...prevState.chatHistory, msg]
-        }))
-        console.log(this.state)
+        var msgData = JSON.parse(msg.data);
+        if (msgData.type == 2) {
+          console.log(msgData.clientCount)
+        }
+        else {
+          this.setState(prevState => ({
+            chatHistory: [...prevState.chatHistory, msg]
+          }))
+        }
       });
     }
   }

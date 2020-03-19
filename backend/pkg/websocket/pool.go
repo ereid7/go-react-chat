@@ -36,7 +36,9 @@ func (pool *Pool) Start() {
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
 							fmt.Println(client)
+							// TODO only connect once user logs in, add user name to this
 							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
+							client.Conn.WriteJSON(StateMessage{Type: 2, ClientCount: len(pool.Clients)})
 
 							pool.CleanupMessageList();
 
@@ -50,6 +52,7 @@ func (pool *Pool) Start() {
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
 							client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected..."})
+							client.Conn.WriteJSON(StateMessage{Type: 2, ClientCount: len(pool.Clients)})
 					}
 					break
 			case message := <-pool.Broadcast:

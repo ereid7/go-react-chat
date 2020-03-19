@@ -14,10 +14,14 @@ type Client struct {
 	Pool *Pool
 }
 type Message struct {
-	Type int    `json:"type"`
+	Type int `json:"type"`
 	Body string `json:"body"`
 	User string `json:"user"`
 	TimeStamp time.Time `json:"timeStamp"`
+}
+type StateMessage struct {
+	Type int `json:"type"`
+	ClientCount int `json:"clientCount"`
 }
 
 type MessageData struct {

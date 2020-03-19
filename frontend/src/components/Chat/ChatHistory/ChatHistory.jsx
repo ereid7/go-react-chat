@@ -4,10 +4,10 @@ import Message from '../Message';
 
 class ChatHistory extends Component {
     render() {
-        console.log(this.props.chatHistory)
+        //console.log(this.props.chatHistory)
         // TODO give each message unique key
         const messages = this.props.chatHistory.map(msg => <Message message={msg.data} />);
-
+        //console.log(messages)
         return (
             <div className="ChatHistory">
                 <h2>Chat History</h2>
