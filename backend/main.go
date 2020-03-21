@@ -7,6 +7,7 @@ import (
     "github.com/evanreid88/go-react-chat/pkg/websocket"
 )
 
+// TODO move to seperate file
 type ChatServer struct {
     messageList []websocket.MessageData 
 }
@@ -18,7 +19,24 @@ func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter,
         fmt.Fprintf(w, "%+v\n", err)
     }
 
+    users, ok := r.URL.Query()["user"]
+    if !ok || len(users[0]) < 1 {
+        fmt.Println("Url Param 'user' is missing")
+        return
+    }
+
+    userIds, ok := r.URL.Query()["userId"]
+    if !ok || len(userIds[0]) < 1 {
+        fmt.Println("Url Param 'userId' is missing")
+        return
+    }
+
+    user := users[0]
+    userId := userIds[0]
+
     client := &websocket.Client{
+        ID: userId,
+        User: user,
         Conn: conn,
         Pool: pool,
     }

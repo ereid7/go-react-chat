@@ -20,12 +20,15 @@ class Auth {
 
   isAuthenticated() {
     var test = sessionStorage.getItem(this.sessionStorageUser);
-    console.log(test)
     return test;
   }
 
-  getUser() {
+  getUserName() {
     return JSON.parse(sessionStorage.getItem(this.sessionStorageUser))._name;
+  }
+
+  getUserId() {
+    return JSON.parse(sessionStorage.getItem(this.sessionStorageUser))._userId;
   }
 
   createGuid() {  

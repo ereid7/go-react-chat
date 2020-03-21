@@ -14,7 +14,8 @@ class ChatPage extends Component {
     super(props);
     this.state = {
       isActive: false,
-      chatHistory: []
+      chatHistory: [],
+      userList: []
     }
   }
 
@@ -31,18 +32,28 @@ class ChatPage extends Component {
   };
 
   componentDidMount() {
-    // TODO provide real authentication to differentiate users
     if (auth.isAuthenticated()) {
-      this._chatSocket = new ChatSocket("ws://localhost:8080/ws", true)
-      this._chatSocket.connect((msg) => {
-        var msgData = JSON.parse(msg.data);
-        if (msgData.type === 2) {
-          console.log(msgData.clientCount)
-        }
-        else {
-          this.setState(prevState => ({
-            chatHistory: [...prevState.chatHistory, msg]
-          }))
+      this._chatSocket = new ChatSocket("ws://localhost:8080/ws", auth.getUserName(), auth.getUserId(), true)
+      this._chatSocket.connect((event) => {
+        switch (event.type) {
+          case "close":
+            // TODO notify user about logout due to websocket closed
+            auth.logout(() => {
+              this.props.history.push("/");
+            });
+            break;
+          default:
+            var msgData = JSON.parse(event.data);
+            if (msgData.type === 2) {
+              console.log(msgData.clientCount)
+            }
+            else 
+            {
+              this.setState(prevState => ({
+                chatHistory: [...prevState.chatHistory, event]
+              }))
+              break;
+            }
         }
       });
     }
@@ -54,7 +65,7 @@ class ChatPage extends Component {
 
   send(event) {
     if(event.keyCode === 13) {
-      this._chatSocket.sendMsg(auth.getUser(), event.target.value);
+      this._chatSocket.sendMsg(event.target.value, auth.getUserId());
       event.target.value = "";
     }
   }

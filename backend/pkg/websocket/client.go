@@ -10,6 +10,7 @@ import (
 
 type Client struct {
 	ID string
+	User string
 	Conn *websocket.Conn
 	Pool *Pool
 }
@@ -26,7 +27,7 @@ type StateMessage struct {
 
 type MessageData struct {
 	Message string
-	User string
+	Id string
 }
 
 func (c *Client) Read() {
@@ -38,18 +39,23 @@ func (c *Client) Read() {
 	for {
 		messageType, p, err := c.Conn.ReadMessage()
 		if err != nil {
-				log.Println(err)
-				return 
+			log.Println(err)
+			return 
 		}
 
 		var messageData MessageData
 		json.Unmarshal([]byte(p), &messageData)
 
+		if messageData.Id != c.ID {
+			log.Println("Unauthorized User")
+			return
+		}
+
 		message := Message {
 			Type: messageType, 
 			Body: messageData.Message,
-			User: messageData.User,
-		  TimeStamp: time.Now() }
+			User: c.User,
+			TimeStamp: time.Now() }
 			
 		c.Pool.Broadcast <- message
 		fmt.Printf("Message Received: %+v\n", message)

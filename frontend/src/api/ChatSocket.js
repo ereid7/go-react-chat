@@ -3,13 +3,16 @@ class ChatSocket {
   _socketEndpoint;
   _socket;
 
-  constructor(socketEndpoint, connect = false) {
-    this._socketEndpoint = socketEndpoint;
+  constructor(socketEndpoint, 
+              userName,
+              userId,
+              connect = false) {
+    this._socketEndpoint = `${socketEndpoint}?user=${userName}&userId=${userId}`;
     this._socket = connect ? new WebSocket(this._socketEndpoint) : null;
   }
 
   createSocket() {
-    if (this._socket = null) {
+    if (this._socket == null) {
       this._socket = new WebSocket(this._socketEndpoint)
     }
   }
@@ -29,12 +32,12 @@ class ChatSocket {
     };
   
     this._socket.onmessage = (msg) => {
-      console.log(msg);
       cb(msg)
     };
   
     this._socket.onclose = (event) => {
       console.log("Socket Closed Connection: ", event);
+      cb(event)
     };
   
     this._socket.onerror = (error) => {
@@ -42,12 +45,12 @@ class ChatSocket {
     };
   };
 
-  sendMsg(user, msg) {
+  sendMsg(msg, userId) {
     console.log("sending msg: ", msg);
   
     let messageData = {
       "message": msg,
-      "user": user
+      "id": userId
     }
     this._socket.send(JSON.stringify(messageData));
   };

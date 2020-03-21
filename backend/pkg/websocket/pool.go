@@ -28,7 +28,7 @@ func NewPool(messageLimit int, expirationLimitHrs time.Duration, cleanupHeartbea
 
 // TODO prevent un-authenticated users from connecting
 func (pool *Pool) Start() {
-	go pool.cleanupHeartBeat()
+	go pool.CleanupHeartBeat()
 	for {
 			select {
 			case client := <-pool.Register:
@@ -71,7 +71,7 @@ func (pool *Pool) Start() {
 	}
 }
 
-func (pool *Pool) cleanupHeartBeat() {
+func (pool *Pool) CleanupHeartBeat() {
 	for range time.Tick(time.Minute * pool._cleanupHeartbeatIntervalMins) {
 		pool.CleanupMessageList()
 	}
