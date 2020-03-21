@@ -47,6 +47,7 @@ class ChatPage extends Component {
         this.handleLogout()
         break;
       case 1:
+      case "message":
         this.handleMessage(event)
         break;
       case 2:
@@ -56,7 +57,7 @@ class ChatPage extends Component {
     }
   }
 
-  handleClose() {
+  handleLogout() {
     auth.logout(() => {
       this.props.history.push("/")
     })

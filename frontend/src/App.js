@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <Header />
+        <Header />
         <Switch>
           <Route exact path="/" component={LoginPage} />
           <ProtectedRoute exact path="/chat" component={ChatPage} />

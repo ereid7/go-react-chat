@@ -10,10 +10,16 @@ class Message extends Component {
     };
   }
 
+  displayTime() {
+    console.log(this.state.message.timeStamp)
+    return this.state.message.timeStamp;
+  }
+
   render() {
     return <div className="Message">
-      {this.state.message.user}:&nbsp;
-      {this.state.message.body}
+      <p class="timeStamp">{this.displayTime()}</p>
+      <p class="userName">{this.state.message.user}:&nbsp;</p>
+      <p class="messageBody">{this.state.message.body}</p>
     </div>;
   }
 }
