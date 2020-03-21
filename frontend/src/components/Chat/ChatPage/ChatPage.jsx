@@ -35,28 +35,42 @@ class ChatPage extends Component {
     if (auth.isAuthenticated()) {
       this._chatSocket = new ChatSocket("ws://localhost:8080/ws", auth.getUserName(), auth.getUserId(), true)
       this._chatSocket.connect((event) => {
-        switch (event.type) {
-          case "close":
-            // TODO notify user about logout due to websocket closed
-            auth.logout(() => {
-              this.props.history.push("/");
-            });
-            break;
-          default:
-            var msgData = JSON.parse(event.data);
-            if (msgData.type === 2) {
-              console.log(msgData.clientCount)
-            }
-            else 
-            {
-              this.setState(prevState => ({
-                chatHistory: [...prevState.chatHistory, event]
-              }))
-              break;
-            }
-        }
+        this.handleSocketEvent(event)
       });
     }
+  }
+
+  handleSocketEvent(event) {
+    switch (event.type) {
+      case "close":
+        // TODO notify user about logout due to websocket closed
+        this.handleLogout()
+        break;
+      case 1:
+        this.handleMessage(event)
+        break;
+      case 2:
+        this.handleStateMessage(event)
+        break;
+      default:
+    }
+  }
+
+  handleClose() {
+    auth.logout(() => {
+      this.props.history.push("/")
+    })
+  }
+
+  handleMessage(event) {
+    this.setState(prevState => ({
+      chatHistory: [...prevState.chatHistory, event]
+    }))
+  }
+
+  handleStateMessage(event) {
+    const msgData = JSON.parse(event.data)
+    console.log(msgData.clientList)
   }
 
   componentWillUnmount() {
@@ -74,9 +88,7 @@ class ChatPage extends Component {
     return (
       <div className="ChatPage">
         <button onClick={() => {
-          auth.logout(() => {
-            this.props.history.push("/");
-          });
+          this.handleLogout()
         }}>Logout</button>
         
         <ChatHistory chatHistory={this.state.chatHistory} />

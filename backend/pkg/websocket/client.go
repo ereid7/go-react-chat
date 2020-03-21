@@ -22,7 +22,7 @@ type Message struct {
 }
 type StateMessage struct {
 	Type int `json:"type"`
-	ClientCount int `json:"clientCount"`
+	ClientList []string `json:"clientList"`
 }
 
 type MessageData struct {

@@ -26,40 +26,39 @@ func NewPool(messageLimit int, expirationLimitHrs time.Duration, cleanupHeartbea
 	}
 }
 
-// TODO prevent un-authenticated users from connecting
 func (pool *Pool) Start() {
 	go pool.CleanupHeartBeat()
 	for {
 			select {
+			// client connecting
 			case client := <-pool.Register:
 					pool.Clients[client] = true
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
 							fmt.Println(client)
-							// TODO only connect once user logs in, add user name to this
 							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
-							client.Conn.WriteJSON(StateMessage{Type: 2, ClientCount: len(pool.Clients)})
+							client.Conn.WriteJSON(StateMessage{Type: 2, ClientList: pool.GetClientNames()})
 
 							pool.CleanupMessageList();
-
 							for _, message := range pool._messageList {
 								client.Conn.WriteJSON(message);
 							}
 					}
 					break
+			// client disconnecting
 			case client := <-pool.Unregister:
 					delete(pool.Clients, client)
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
 							client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected..."})
-							client.Conn.WriteJSON(StateMessage{Type: 2, ClientCount: len(pool.Clients)})
+							client.Conn.WriteJSON(StateMessage{Type: 2, ClientList: pool.GetClientNames()})
 					}
 					break
+			// client broadcasting message
 			case message := <-pool.Broadcast:
 					fmt.Println("Sending message to all clients in Pool")
 					for client, _ := range pool.Clients {
 				
-						// TODO handle user color on frontend
 						pool.CleanupMessageList();
 						pool._messageList = append(pool._messageList, message)
 						if err := client.Conn.WriteJSON(message); err != nil {
@@ -69,6 +68,16 @@ func (pool *Pool) Start() {
 					}
 			}
 	}
+}
+
+func (pool *Pool) GetClientNames() []string {
+	clients := make([]string, len(pool.Clients))
+	i := 0
+	for k := range pool.Clients {
+		clients[i] = k.User
+		i++
+	}
+	return clients;
 }
 
 func (pool *Pool) CleanupHeartBeat() {

@@ -19,20 +19,18 @@ func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter,
         fmt.Fprintf(w, "%+v\n", err)
     }
 
-    users, ok := r.URL.Query()["user"]
-    if !ok || len(users[0]) < 1 {
+    keys := r.URL.Query()
+    user := keys.Get("user")
+    if len(user) < 1 {
         fmt.Println("Url Param 'user' is missing")
         return
     }
 
-    userIds, ok := r.URL.Query()["userId"]
-    if !ok || len(userIds[0]) < 1 {
+    userId := keys.Get("userId")
+    if len(userId) < 1 {
         fmt.Println("Url Param 'userId' is missing")
         return
     }
-
-    user := users[0]
-    userId := userIds[0]
 
     client := &websocket.Client{
         ID: userId,
