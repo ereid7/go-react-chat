@@ -18,7 +18,7 @@ type Message struct {
 	Type int `json:"type"`
 	Body string `json:"body"`
 	User string `json:"user"`
-	TimeStamp time.Time `json:"timeStamp"`
+	TimeStamp string `json:"timeStamp"`
 }
 type StateMessage struct {
 	Type int `json:"type"`
@@ -55,7 +55,7 @@ func (c *Client) Read() {
 			Type: messageType, 
 			Body: messageData.Message,
 			User: c.User,
-			TimeStamp: time.Now() }
+			TimeStamp: time.Now().Format(time.RFC822) }
 			
 		c.Pool.Broadcast <- message
 		fmt.Printf("Message Received: %+v\n", message)

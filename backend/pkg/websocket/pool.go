@@ -36,7 +36,7 @@ func (pool *Pool) Start() {
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
 							fmt.Println(client)
-							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
+							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined...", TimeStamp: time.Now().Format(time.RFC822)})
 							client.Conn.WriteJSON(StateMessage{Type: 2, ClientList: pool.GetClientNames()})
 
 							pool.CleanupMessageList();
@@ -50,7 +50,7 @@ func (pool *Pool) Start() {
 					delete(pool.Clients, client)
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
-							client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected..."})
+							client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected...", TimeStamp: time.Now().Format(time.RFC822)})
 							client.Conn.WriteJSON(StateMessage{Type: 2, ClientList: pool.GetClientNames()})
 					}
 					break
@@ -93,7 +93,8 @@ func (pool *Pool) CleanupMessageList() {
 
 	for index, message := range pool._messageList {
 		expirationTime := time.Now().Add(-pool._expirationLimitHrs * time.Hour);
-		if (message.TimeStamp.Before(expirationTime)) {
+		messageTime, _ := time.Parse(time.RFC822, message.TimeStamp)
+		if (messageTime.Before(expirationTime)) {
 			pool._messageList = pool._messageList[len(pool._messageList) - index:]
 			return
 		}

@@ -2,25 +2,27 @@ import React, { Component } from "react";
 import "./Message.scss";
 
 class Message extends Component {
+
+  // TODO ahve chathistory pass property to display timestamp
   constructor(props) {
     super(props);
     let temp = JSON.parse(this.props.message);
     this.state = {
-      message: temp
+      message: temp,
+      timeStamp: this.displayTime(temp.timeStamp)
     };
   }
 
-  displayTime() {
-    var test =  new Date(this.state.message.timeStamp);
-    // TODO convert to local time zone
-    return test.toLocaleString();
+  displayTime(timeStamp) {
+    var localeTime = new Date(timeStamp).toLocaleTimeString();
+    return `${localeTime.substr(0, localeTime.length - 6)} ${localeTime.substr(localeTime.length - 2, localeTime.length)}`;
   }
 
   render() {
     return <div className="Message">
-      <p class="timeStamp">{this.displayTime()}</p>
-      <p class="userName">{this.state.message.user}:&nbsp;</p>
-      <p class="messageBody">{this.state.message.body}</p>
+      <span class="timeStamp">{this.state.timeStamp}</span>
+      <span class="userName">{this.state.message.user}:&nbsp;</span>
+      <span class="messageBody">{this.state.message.body}</span>
     </div>;
   }
 }
