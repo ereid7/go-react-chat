@@ -11,8 +11,9 @@ class Message extends Component {
   }
 
   displayTime() {
-    console.log(this.state.message.timeStamp)
-    return this.state.message.timeStamp;
+    var test =  new Date(this.state.message.timeStamp);
+    // TODO convert to local time zone
+    return test.toLocaleString();
   }
 
   render() {
