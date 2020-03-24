@@ -4,6 +4,7 @@ import ChatSocket from '../../../api/ChatSocket';
 import "./ChatPage.scss";
 import ChatHistory from "../ChatHistory/ChatHistory";
 import ChatInput from "../ChatInput";
+import UserList from "../UserList";
 import auth from '../../../authorization/auth';
 
 class ChatPage extends Component {
@@ -40,6 +41,10 @@ class ChatPage extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this._chatSocket.closeSocket();
+  }
+
   handleSocketEvent(event) {
     switch (event.type) {
       case "close":
@@ -74,10 +79,6 @@ class ChatPage extends Component {
     console.log(msgData.clientList)
   }
 
-  componentWillUnmount() {
-    this._chatSocket.closeSocket();
-  }
-
   send(event) {
     if(event.keyCode === 13) {
       this._chatSocket.sendMsg(event.target.value, auth.getUserId());
@@ -91,6 +92,8 @@ class ChatPage extends Component {
         <button onClick={() => {
           this.handleLogout()
         }}>Logout</button>
+
+        <UserList></UserList>
         
         <ChatHistory chatHistory={this.state.chatHistory} />
         <ChatInput send={e => this.send(e)} />

@@ -1,27 +1,22 @@
-// .Message {
-//   display: block;
-//   background-color: white;
-//   margin: 10px auto;
-//   box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.2);
-//   padding: 10px 20px;
-//   border-radius: 5px;
-//   clear: both;
-
-//   &.me {
-//     color: white;
-//     float: right;
-//     background-color: #328ec4;
-//   }
-// }
 
 .Message {
   text-align: left;
-  margin: 5px;
-  margin-left: 15px;
+  width: 800px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 3px;
+  border-radius: 3px;
+  margin-left: -2px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.Message:hover {
+  background-color: #3E4046;
 }
 
 span {
-  margin-right: 8px;
+  padding-right: 8px;
 }
 
 .timeStamp {
@@ -36,5 +31,6 @@ span {
 
 .messageBody {
   font-size: 16px;
+  word-wrap: break-word;
   color: #D7D5D9;
 }

@@ -1,11 +1,22 @@
 .ChatHistory {
-  width: 800px;
-  padding: 20px;
-  display: block;
-  margin: auto;
 
   h2 {
     margin: 0;
     padding: 0;
   }
+}
+
+#chatHistory {
+  position: fixed;
+  width: 100%;
+  max-height: calc(100vh - 102px);
+  overflow-y: scroll;
+  overflow: auto;
+  bottom: 50px;
+}
+
+#history {
+  width: 800px;
+  padding: 20px;
+  margin: auto;
 }

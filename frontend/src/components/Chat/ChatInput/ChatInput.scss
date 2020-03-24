@@ -1,18 +1,18 @@
 .ChatInput {
-  width: 800px;
-  display: block;
-  margin: auto;
+  width: 100%;
+  position: fixed;
+  bottom: 20px;
 
   input {
     padding: 10px;
-    margin: 0;
+    margin: auto;
     background-color: #40444B;
     color: #D7D5D9;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    width: 98%;
+    width: 800px;
     box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
   }
 }

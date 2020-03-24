@@ -3,7 +3,7 @@ import "./Message.scss";
 
 class Message extends Component {
 
-  // TODO ahve chathistory pass property to display timestamp
+  // TODO have chathistory pass property to display timestamp
   constructor(props) {
     super(props);
     let temp = JSON.parse(this.props.message);
@@ -15,7 +15,7 @@ class Message extends Component {
 
   displayTime(timeStamp) {
     var localeTime = new Date(timeStamp).toLocaleTimeString();
-    return `${localeTime.substr(0, localeTime.length - 6)} ${localeTime.substr(localeTime.length - 2, localeTime.length)}`;
+    return `${localeTime.substr(0, localeTime.length - 6)}\u00A0${localeTime.substr(localeTime.length - 2, localeTime.length)}`;
   }
 
   render() {
