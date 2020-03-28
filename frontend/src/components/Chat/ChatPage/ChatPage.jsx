@@ -51,12 +51,8 @@ class ChatPage extends Component {
         // TODO notify user about logout due to websocket closed
         this.handleLogout()
         break;
-      case 1:
       case "message":
         this.handleMessage(event)
-        break;
-      case 2:
-        this.handleStateMessage(event)
         break;
       default:
     }
@@ -69,14 +65,20 @@ class ChatPage extends Component {
   }
 
   handleMessage(event) {
-    this.setState(prevState => ({
-      chatHistory: [...prevState.chatHistory, event]
-    }))
-  }
-
-  handleStateMessage(event) {
-    const msgData = JSON.parse(event.data)
-    console.log(msgData.clientList)
+    const msgData = JSON.parse(event.data);
+    switch(msgData.type) {
+      case 0:
+        this.setState({
+          userList: msgData.clientList
+        });
+        break;
+      case 1:
+        this.setState(prevState => ({
+          chatHistory: [...prevState.chatHistory, event]
+        }))
+        break;
+      default:
+    }
   }
 
   send(event) {
@@ -92,7 +94,7 @@ class ChatPage extends Component {
         <button onClick={() => {
           this.handleLogout()
         }}>Logout</button>
-        <UserList></UserList>
+        <UserList userList={this.state.userList}></UserList>
         
         <ChatHistory chatHistory={this.state.chatHistory} />
         <ChatInput send={e => this.send(e)} />

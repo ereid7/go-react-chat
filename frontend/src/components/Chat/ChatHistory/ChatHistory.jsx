@@ -17,13 +17,10 @@ class ChatHistory extends Component {
     }
 
     render() {
-        //console.log(this.props.chatHistory)
-        // TODO give each message unique key
-        const messages = this.props.chatHistory.map(msg => <Message message={msg.data} />);
-        //console.log(messages)
+        const messages = this.props.chatHistory.map((msg, index) => <Message key={index} message={msg.data} />);
         return (
             <div className="ChatHistory">
-                <div id="chatHistory">
+                <div id="chatHistory" className="disable-scrollbars">
                     <div id="history">
                     {messages}
                     </div>

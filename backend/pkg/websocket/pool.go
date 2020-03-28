@@ -37,7 +37,7 @@ func (pool *Pool) Start() {
 					for client, _ := range pool.Clients {
 							fmt.Println(client)
 							client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined...", TimeStamp: time.Now().Format(time.RFC822)})
-							client.Conn.WriteJSON(StateMessage{Type: 2, ClientList: pool.GetClientNames()})
+							client.Conn.WriteJSON(StateMessage{Type: 0, ClientList: pool.GetClientNames()})
 
 							pool.CleanupMessageList();
 							for _, message := range pool._messageList {
@@ -51,14 +51,13 @@ func (pool *Pool) Start() {
 					fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 					for client, _ := range pool.Clients {
 							client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected...", TimeStamp: time.Now().Format(time.RFC822)})
-							client.Conn.WriteJSON(StateMessage{Type: 2, ClientList: pool.GetClientNames()})
+							client.Conn.WriteJSON(StateMessage{Type: 0, ClientList: pool.GetClientNames()})
 					}
 					break
 			// client broadcasting message
 			case message := <-pool.Broadcast:
 					fmt.Println("Sending message to all clients in Pool")
 					for client, _ := range pool.Clients {
-				
 						pool.CleanupMessageList();
 						pool._messageList = append(pool._messageList, message)
 						if err := client.Conn.WriteJSON(message); err != nil {

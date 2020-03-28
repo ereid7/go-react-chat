@@ -20,9 +20,9 @@ class Message extends Component {
 
   render() {
     return <div className="Message">
-      <span class="timeStamp">{this.state.timeStamp}</span>
-      <span class="userName">{this.state.message.user}:&nbsp;</span>
-      <span class="messageBody">{this.state.message.body}</span>
+      <span className="timeStamp">{this.state.timeStamp}</span>
+      <span className="userName">{this.state.message.user}:&nbsp;</span>
+      <span className="messageBody">{this.state.message.body}</span>
     </div>;
   }
 }
