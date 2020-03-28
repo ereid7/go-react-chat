@@ -5,16 +5,16 @@ import Message from '../Message';
 class ChatHistory extends Component {
 
     componentDidMount() {
-        this.scrollToBottom();
-      }
+      this.scrollToBottom();
+    }
     
-      componentDidUpdate() {
-        this.scrollToBottom();
-      }
+    componentDidUpdate() {
+      this.scrollToBottom();
+    }
     
-      scrollToBottom() {
-        this.el.scrollIntoView({ behavior: 'smooth' });
-      }
+    scrollToBottom() {
+      this.el.scrollIntoView({ behavior: 'smooth' });
+    }
 
     render() {
         //console.log(this.props.chatHistory)

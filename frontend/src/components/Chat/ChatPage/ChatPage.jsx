@@ -92,7 +92,6 @@ class ChatPage extends Component {
         <button onClick={() => {
           this.handleLogout()
         }}>Logout</button>
-
         <UserList></UserList>
         
         <ChatHistory chatHistory={this.state.chatHistory} />
