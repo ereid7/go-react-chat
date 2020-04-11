@@ -13,17 +13,17 @@ class Message extends Component {
     };
   }
 
-  displayTime(timeStamp) {
-    var localeTime = new Date(timeStamp).toLocaleTimeString();
-    return `${localeTime.substr(0, localeTime.length - 6)}\u00A0${localeTime.substr(localeTime.length - 2, localeTime.length)}`;
-  }
-
   render() {
     return <div className="Message">
       <span className="timeStamp">{this.state.timeStamp}</span>
-      <span className="userName">{this.state.message.user}:&nbsp;</span>
+      <span className="userName" style={{ color: this.state.message.color }}>{this.state.message.user}&nbsp;</span>
       <span className="messageBody">{this.state.message.body}</span>
     </div>;
+  }
+
+  displayTime(timeStamp) {
+    var localeTime = new Date(timeStamp).toLocaleTimeString();
+    return `${localeTime.substr(0, localeTime.length - 6)}\u00A0${localeTime.substr(localeTime.length - 2, localeTime.length)}`;
   }
 }
 

@@ -4,6 +4,8 @@ package main
 import (
     "fmt"
     "net/http"
+    "math/rand"
+    "time"
     "github.com/evanreid88/go-react-chat/pkg/websocket"
 )
 
@@ -11,6 +13,13 @@ import (
 type ChatServer struct {
     messageList []websocket.MessageData 
 }
+
+// TODO add more colors
+const(
+	Turquoise = "#1ABC9C"
+	Orange    = "#E67E2A" 
+	Red       = "#E92750"   
+) 
 
 func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
     fmt.Println("WebSocket Endpoint Hit")
@@ -35,12 +44,19 @@ func (c *ChatServer) ServeWebSocket(pool *websocket.Pool, w http.ResponseWriter,
     client := &websocket.Client{
         ID: userId,
         User: user,
+        Color: GetColor(),
         Conn: conn,
         Pool: pool,
     }
     
     pool.Register <- client
     client.Read()
+}
+
+func GetColor() string {
+	var colorList = [3]string{Turquoise, Orange, Red};
+	rand.Seed(time.Now().Unix())
+	return colorList[rand.Intn(3)]
 }
     
 func (c *ChatServer) SetupRoutes() {

@@ -2,7 +2,17 @@ package websocket
 import "fmt"
 import "time"
 
-type Pool struct {
+type StateMessage struct {
+	Type int `json:"type"`
+	ClientList []UserInfo `json:"clientList"`
+}
+
+type UserInfo struct {
+	Name string `json:"name"`
+	Color string `json:"color"`
+}
+
+type Pool struct {   
 	Register   chan *Client
 	Unregister chan *Client
 	Clients    map[*Client]bool
@@ -69,11 +79,14 @@ func (pool *Pool) Start() {
 	}
 }
 
-func (pool *Pool) GetClientNames() []string {
-	clients := make([]string, len(pool.Clients))
+func (pool *Pool) GetClientNames() []UserInfo {
+	clients := make([]UserInfo, len(pool.Clients))
 	i := 0
 	for k := range pool.Clients {
-		clients[i] = k.User
+		clients[i] = UserInfo {
+				Name: k.User,
+				Color: k.Color,
+		}
 		i++
 	}
 	return clients;

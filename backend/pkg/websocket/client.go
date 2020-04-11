@@ -11,6 +11,7 @@ import (
 type Client struct {
 	ID string
 	User string
+	Color string 
 	Conn *websocket.Conn
 	Pool *Pool
 }
@@ -18,11 +19,8 @@ type Message struct {
 	Type int `json:"type"`
 	Body string `json:"body"`
 	User string `json:"user"`
+	Color string `json:"color"`
 	TimeStamp string `json:"timeStamp"`
-}
-type StateMessage struct {
-	Type int `json:"type"`
-	ClientList []string `json:"clientList"`
 }
 
 type MessageData struct {
@@ -55,6 +53,7 @@ func (c *Client) Read() {
 			Type: messageType, 
 			Body: messageData.Message,
 			User: c.User,
+			Color: c.Color,
 			TimeStamp: time.Now().Format(time.RFC822) }
 			
 		c.Pool.Broadcast <- message
