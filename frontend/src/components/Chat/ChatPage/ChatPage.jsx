@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 //import { connect, sendMsg } from '../../../api';
+import { Redirect } from 'react-router-dom';
 import ChatSocket from '../../../api/ChatSocket';
 import "./ChatPage.scss";
 import ChatHistory from "../ChatHistory/ChatHistory";
@@ -63,7 +64,6 @@ class ChatPage extends Component {
       this.props.history.push("/")
     })
   }
-
   handleMessage(event) {
     const msgData = JSON.parse(event.data);
     switch(msgData.type) {
@@ -82,18 +82,19 @@ class ChatPage extends Component {
   }
 
   send(event) {
-    if(event.keyCode === 13) {
+    if(event.keyCode === 13 && event.target.value !== "") {
       this._chatSocket.sendMsg(event.target.value, auth.getUserId());
       event.target.value = "";
     }
   }
 
   render() {
+    if (!auth.isAuthenticated()) {
+      return <Redirect to='/' />
+    }
+
     return (
       <div className="ChatPage">
-        <button onClick={() => {
-          this.handleLogout()
-        }}>Logout</button>
         <UserList userList={this.state.userList}></UserList>
         
         <ChatHistory chatHistory={this.state.chatHistory} />

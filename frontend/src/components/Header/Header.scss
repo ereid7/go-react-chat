@@ -7,9 +7,18 @@
     top: 0;
     padding: 10px 0;
     color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .logout-button {
+      float: right;
+    }
   
     h2 {
+      width: 200px;
       margin: 0;
       padding: 0;
     }
-  }
+}
