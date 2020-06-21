@@ -17,7 +17,8 @@ class ChatHistory extends Component {
     }
 
     render() {
-        const messages = this.props.chatHistory.map((msg, index) => <Message key={index} message={msg.data} />);
+        const messages = this.props.chatHistory.map((msg, index) => <Message key={index} message={msg.data}  />);
+        
         return (
             <div className="ChatHistory">
                 <div id="chatHistory" className="disable-scrollbars">

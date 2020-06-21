@@ -3,7 +3,6 @@ import "./Message.scss";
 
 class Message extends Component {
 
-  // TODO have chathistory pass property to display timestamp
   constructor(props) {
     super(props);
     let temp = JSON.parse(this.props.message);

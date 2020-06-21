@@ -50,9 +50,9 @@ func (pool *Pool) Start() {
 							client.Conn.WriteJSON(StateMessage{Type: 0, ClientList: pool.GetClientNames()})
 
 							pool.CleanupMessageList();
-							for _, message := range pool._messageList {
-								client.Conn.WriteJSON(message);
-							}
+							// for _, message := range pool._messageList {
+							// 	client.Conn.WriteJSON(message);
+							// }
 					}
 					break
 			// client disconnecting

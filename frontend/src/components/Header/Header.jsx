@@ -15,7 +15,7 @@ class Header extends Component {
     return (
     <div className="header">
         <h2>Evan Chat</h2>
-        <button class="logout-button" onClick={() => {
+        <button className="logout-button" onClick={() => {
           this.handleLogout()
         }}>Logout</button>
     </div>

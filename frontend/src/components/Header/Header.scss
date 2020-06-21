@@ -6,7 +6,7 @@
     width: 100%;
     top: 0;
     padding: 10px 0;
-    color: white;
+    color: #B9BBBE;
 
     display: flex;
     justify-content: center;
@@ -20,5 +20,18 @@
       width: 200px;
       margin: 0;
       padding: 0;
+    }
+
+    .logout-button {
+      padding: 4px 10px 4px 10px;
+      background-color: #36393F;
+      color: #B9BBBE;
+      border-radius: 4px;
+      border-style: none
+    }
+    
+    .logout-button:hover {
+      background-color: #595E66;
+      cursor: pointer;
     }
 }

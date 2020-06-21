@@ -20,16 +20,28 @@ class LoginPage extends Component {
   render() {
     return (
       <div className="LoginPage">
-        <input name='name' value={this.state.name} onChange={e => this.handleChange(e)} />
-        <button onClick={() => this.submitLogin()}>Login</button>
+        <div className="loginContainer" onKeyPress={this.keyPressed}>
+          <div className="form__group field">
+            <input type="input" className="form__field" name='name' id="name" value={this.state.name} onChange={e => this.handleChange(e)} />
+            <label htmlFor="name" className="form__label">Username</label>
+          </div>
+
+          <button className="login-button" onKeyPress={this.onKeyPress} onClick={this.submitLogin}>Login</button>
+        </div>
       </div>
     )
   }
 
-  submitLogin(cb) {
+  submitLogin = () => {
     auth.login(this.state.name, () => {
       this.props.history.push("/chat");
     })
+  }
+
+  keyPressed = (event) => {
+    if (event.key === "Enter") {
+      this.submitLogin();
+    }
   }
 }
 
