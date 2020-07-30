@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-//import { connect, sendMsg } from '../../../api';
 import { Redirect } from 'react-router-dom';
 import ChatSocket from '../../../api/ChatSocket';
 import "./ChatPage.scss";
