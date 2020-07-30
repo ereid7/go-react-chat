@@ -24,7 +24,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        working-directory: ./frontend
+    working-directory: ./frontend
     - run: npm ci
+    working-directory: ./frontend
     - run: npm run build --if-present
+    working-directory: ./frontend
     - run: npm test
