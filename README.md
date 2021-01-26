@@ -26,4 +26,4 @@ Navigate to `http://localhost:3000/`
 
 Example:
 
-![](evan-chat-example.gif)
+![](evan_chat_example.gif)
